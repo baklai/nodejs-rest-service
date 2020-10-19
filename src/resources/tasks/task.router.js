@@ -4,51 +4,71 @@ const tasksService = require('./task.service');
 
 router
   .route('/')
-  .get(async (req, res) => {
-    const tasks = await tasksService.findAll(req.params.boardId);
-    res.status(200).send(tasks);
+  .get(async (req, res, next) => {
+    try {
+      const tasks = await tasksService.findAll(req.params.boardId);
+      res.status(200).send(tasks);
+    } catch (err) {
+      next(err);
+    }
   })
-  .post(async (req, res) => {
-    const task = new Task({ ...req.body, boardId: req.params.boardId });
-    await tasksService.createOne(task);
-    res.status(200).send(task);
+  .post(async (req, res, next) => {
+    try {
+      const task = new Task({ ...req.body, boardId: req.params.boardId });
+      await tasksService.createOne(task);
+      res.status(200).send(task);
+    } catch (err) {
+      next(err);
+    }
   });
 
 router
   .route('/:taskId')
-  .get(async (req, res) => {
-    const task = await tasksService.findOne(
-      req.params.boardId,
-      req.params.taskId
-    );
-    if (task) {
-      res.status(200).send(task);
-    } else {
-      res.sendStatus(404);
+  .get(async (req, res, next) => {
+    try {
+      const task = await tasksService.findOne(
+        req.params.boardId,
+        req.params.taskId
+      );
+      if (task) {
+        res.status(200).send(task);
+      } else {
+        res.sendStatus(404);
+      }
+    } catch (err) {
+      next(err);
     }
   })
-  .put(async (req, res) => {
-    const task = {
-      ...req.body,
-      id: req.params.taskId,
-      boardId: req.params.boardId
-    };
-    const isUpdated = await tasksService.updateOne(task);
-    if (isUpdated) {
-      res.status(200).send(task);
-    } else {
-      res.sendStatus(404);
+  .put(async (req, res, next) => {
+    try {
+      const task = {
+        ...req.body,
+        id: req.params.taskId,
+        boardId: req.params.boardId
+      };
+      const isUpdated = await tasksService.updateOne(task);
+      if (isUpdated) {
+        res.status(200).send(task);
+      } else {
+        res.sendStatus(404);
+      }
+    } catch (err) {
+      next(err);
     }
   })
-  .delete(async (req, res) => {
-    const task = await tasksService.removeOne(
-      req.params.boardId,
-      req.params.taskId
-    );
-    if (task) {
-      res.sendStatus(204);
-    } else {
-      res.sendStatus(404);
+  .delete(async (req, res, next) => {
+    try {
+      const task = await tasksService.removeOne(
+        req.params.boardId,
+        req.params.taskId
+      );
+      if (task) {
+        res.sendStatus(204);
+      } else {
+        res.sendStatus(404);
+      }
+    } catch (err) {
+      next(err);
     }
   });
 
