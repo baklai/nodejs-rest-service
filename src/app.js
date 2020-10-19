@@ -28,4 +28,16 @@ app.use('/users', userRouter);
 app.use('/boards', boardRouter);
 boardRouter.use('/:boardId/tasks', taskRouter);
 
+const { restError } = require('./common/error');
+
+app.use((err, req, res, next) => {
+  restError(err, res);
+});
+
+// Test error: uncaughtException || unhandledRejection
+
+// throw Error('Oops!');
+// or
+// Promise.reject(Error('Oops!'));
+
 module.exports = app;
