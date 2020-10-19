@@ -11,6 +11,9 @@ const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 
 app.use(express.json());
 
+const loggerMiddleware = require('./common/logger');
+app.use(loggerMiddleware.logger);
+
 app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use('/', (req, res, next) => {
