@@ -14,8 +14,7 @@ router
   })
   .post(async (req, res, next) => {
     try {
-      const user = new User(req.body);
-      await usersService.createOne(user);
+      const user = await usersService.createOne(req.body);
       res.status(200).send(User.toResponse(user));
     } catch (err) {
       next(err);
@@ -27,6 +26,7 @@ router
   .get(async (req, res, next) => {
     try {
       const user = await usersService.findOne(req.params.id);
+      console.log(User.toResponse(user));
       if (user) {
         res.status(200).send(User.toResponse(user));
       } else {

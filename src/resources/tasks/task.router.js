@@ -26,10 +26,7 @@ router
   .route('/:taskId')
   .get(async (req, res, next) => {
     try {
-      const task = await tasksService.findOne(
-        req.params.boardId,
-        req.params.taskId
-      );
+      const task = await tasksService.findOne(req.params.taskId);
       if (task) {
         res.status(200).send(task);
       } else {
