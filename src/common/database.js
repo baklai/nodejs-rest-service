@@ -22,7 +22,7 @@ const connectToDB = callback => {
           await User.create({
             name: 'admin',
             login: 'admin',
-            password: password
+            password
           });
           callback();
         });

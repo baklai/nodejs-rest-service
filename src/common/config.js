@@ -9,8 +9,8 @@ dotenv.config({
 });
 
 module.exports = {
-  BCRYPT_SALT: BCRYPT_SALT,
-  TOKEN_EXPIRES_IN: TOKEN_EXPIRES_IN,
+  BCRYPT_SALT,
+  TOKEN_EXPIRES_IN,
   PORT: process.env.PORT,
   NODE_ENV: process.env.NODE_ENV,
   MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING,
