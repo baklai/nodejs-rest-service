@@ -1,4 +1,5 @@
-const { MONGO_CONNECTION_STRING } = require('./config');
+const bcrypt = require('bcrypt');
+const { MONGO_CONNECTION_STRING, BCRYPT_SALT } = require('./config');
 const User = require('../resources/users/user.model');
 const Board = require('../resources/boards/board.model');
 
@@ -16,7 +17,13 @@ const connectToDB = callback => {
     console.log("MongoDB: we're connected!");
     db.dropCollection('users', (err, result) => {
       db.dropCollection('boards', (err, result) => {
-        db.dropCollection('tasks', (err, result) => {
+        db.dropCollection('tasks', async (err, result) => {
+          const password = await bcrypt.hash('admin', BCRYPT_SALT);
+          await User.create({
+            name: 'admin',
+            login: 'admin',
+            password: password
+          });
           callback();
         });
       });

@@ -1,6 +1,9 @@
 const router = require('express').Router();
+const bcrypt = require('bcrypt');
 const User = require('./user.model');
 const usersService = require('./user.service');
+
+const { BCRYPT_SALT } = require('../../common/config');
 
 router
   .route('/')
@@ -14,7 +17,8 @@ router
   })
   .post(async (req, res, next) => {
     try {
-      const user = await usersService.createOne(req.body);
+      const password = await bcrypt.hash(req.body.password, BCRYPT_SALT);
+      const user = await usersService.createOne({ ...req.body, password });
       res.status(200).send(User.toResponse(user));
     } catch (err) {
       next(err);
@@ -38,9 +42,11 @@ router
   })
   .put(async (req, res, next) => {
     try {
+      const password = await bcrypt.hash(req.body.password, BCRYPT_SALT);
       const user = {
         ...req.body,
-        id: req.params.id
+        id: req.params.id,
+        password
       };
       const isUpdated = await usersService.updateOne(user);
       if (isUpdated) {
